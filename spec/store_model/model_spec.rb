@@ -752,6 +752,22 @@ RSpec.describe StoreModel::Model do
       end
     end
 
+    context "with a model nested inside a plain hash" do
+      subject { custom_parent_class.new(data: { "outer" => { "inner" => configuration } }) }
+
+      let(:custom_parent_class) do
+        build_custom_product_class do
+          attribute :data, ActiveModel::Type::Value.new
+        end
+      end
+
+      it "leaves its parent unassigned" do
+        subject.data
+
+        expect(configuration.parent).to be_nil
+      end
+    end
+
     context "with an owner declaring a method attribute" do
       subject { custom_parent_class.new(method: "manual", configuration: [{}], settings: { foo: {} }) }
 
